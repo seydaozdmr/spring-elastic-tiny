@@ -2,9 +2,12 @@ package com.seyda.springelastictiny.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.util.Date;
 
 @Document(indexName = "campaigns")
 @Getter
@@ -17,12 +20,12 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Campaign {
     @Id
     private String id;
-    @Field(name = "name",type = FieldType.Text)
+    @Field(name = "name",type = FieldType.Keyword)
     private String name;
-    @Field
+    @Field(name="details",type = FieldType.Keyword)
     private String details;
-    @Field
-    private String startDate;
-    @Field
-    private String endDate;
+    @Field(type =FieldType.Date,format = DateFormat.basic_date_time)
+    private Date startDate;
+    @Field(type = FieldType.Date,format = DateFormat.basic_date_time)
+    private Date endDate;
 }
