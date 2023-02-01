@@ -4,15 +4,10 @@ import com.seyda.springelastictiny.model.Campaign;
 import com.seyda.springelastictiny.repository.CampaignRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CampaignController {
     private final CampaignRepository campaignRepository;
+
 
     @PostConstruct
     public void init(){
@@ -47,10 +43,19 @@ public class CampaignController {
 
     }
 
-    @GetMapping("/campaign/{search}")
-    public ResponseEntity<Page<Campaign>> findCampaigns(@PathVariable String search, Pageable pageable){
-        return ResponseEntity.ok(campaignRepository.searchByCustomQuery(search,pageable));
+    @GetMapping("/campaign")
+    public ResponseEntity<List<Campaign>> findCampaigns(@RequestParam String search){
+        return ResponseEntity.ok(campaignRepository.findByNameLike(search));
     }
+
+    @GetMapping("/campaign/all")
+    public ResponseEntity<List<Campaign>> findAll(){
+        List<Campaign> result = new ArrayList<>();
+        campaignRepository.findAll().forEach(result::add);
+        return ResponseEntity.ok(result);
+    }
+
+
 
 
 }
